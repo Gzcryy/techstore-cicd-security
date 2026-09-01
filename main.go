@@ -15,7 +15,9 @@ func main() {
 	router.GET("/ready", ready)
 	router.GET("/version", getVersion)
 
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		panic(err)
+	}
 }
 
 func health(c *gin.Context) {
