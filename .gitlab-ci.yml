@@ -13,20 +13,28 @@ test:
 
 lint:
   stage: lint
-  image: golangci/golangci-lint:v2.13.2-alpine
+  image:
+    name: golangci/golangci-lint:v2.13.2-alpine
+    entrypoint: [""]
   script:
     - golangci-lint run
 
 security:
   stage: security
-  image: securego/gosec:latest
+  image: golang:1.25-alpine
+  before_script:
+    - apk add --no-cache git
+    - go install github.com/securego/gosec/v2/cmd/gosec@v2.22.8
   script:
-    - gosec ./...
+    - $(go env GOPATH)/bin/gosec ./...
 
 build:
   stage: build
-  image: docker:cli
+  image: docker:27.5.1-cli
   services:
-    - docker:dind
+    - name: docker:27.5.1-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
   script:
     - docker build -t health-check-api:$CI_COMMIT_SHORT_SHA .
