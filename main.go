@@ -15,6 +15,12 @@ func main() {
 	router.GET("/ready", ready)
 	router.GET("/version", getVersion)
 
+	router.GET("/products", getProducts)
+	router.GET("/products/:id", getProduct)
+	router.POST("/products", createProduct)
+	router.PUT("/products/:id", updateProduct)
+	router.DELETE("/products/:id", deleteProduct)
+
 	if err := router.Run(":8080"); err != nil {
 		panic(err)
 	}
